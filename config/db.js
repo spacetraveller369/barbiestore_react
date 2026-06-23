@@ -1,10 +1,16 @@
-const sqlite3 = require('sqlite3').verbose();
-const path = require('path');
+const { Pool } = require('pg');
 
-const dbPath = path.resolve(__dirname, '../barbie_shop.db');
-const db = new sqlite3.Database(dbPath, (err) => {
-    if (err) console.error('Ошибка подключения к БД:', err.message);
-    else console.log('Подключено к базе данных SQLite (Barbie Store).');
+const connectionString = 'postgresql://neondb_owner:npg_PVTdXIlUF18y@ep-noisy-credit-ato4mj2e.c-9.us-east-1.aws.neon.tech/neondb?sslmode=require';
+
+const pool = new Pool({
+    connectionString: connectionString,
+    ssl: {
+        rejectUnauthorized: false 
+    }
 });
 
-module.exports = db;
+pool.on('connect', () => {
+    console.log('Успешно подключено к внешней базе данных PostgreSQL!');
+});
+
+module.exports = pool;
